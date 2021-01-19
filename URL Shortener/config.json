@@ -1,0 +1,9 @@
+{
+  "db": {
+    "database": "shortenerdb",
+    "host": "localhost",
+    "user": "root",
+    "password": ""
+	
+  }
+}

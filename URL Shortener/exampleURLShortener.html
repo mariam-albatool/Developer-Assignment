@@ -1,0 +1,109 @@
+ <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<style>
+table, th, td {
+  border: 1px solid black;
+}
+
+table {
+  width: 100%;
+}
+</style>
+    </head>
+
+    <body>
+
+
+        <h1> Example Shortnere</h1>
+
+        <input type="text"  id="fullUrl"/> <br><br>
+		
+		<button onClick="getShortener()" > Generate shortener</button> <br><br>
+		
+		<ul id="shortUrl">
+		
+		</ul>
+		
+		
+		<a href="#" onclick="getlong('mysql')"> mysql link </a><br><br>
+		<a href="#" onclick="getAll('all')"> Show all links </a>
+		<br>
+		<br>
+		<table style="display:none; "  id ="table" name ="table">
+        <thead>
+          <tr>
+             <th>full URL</th>
+             <th>Short URL</th>
+          </tr>
+        </thead>
+    <tbody id="table_data">
+   
+    </tbody>
+   </table>
+
+        <script>
+		// Generate Shortener URL
+            function getShortener() {
+			
+			  let full_url=document.getElementById("fullUrl").value;
+			  
+                $.ajax({
+                    url: "http://localhost:8884/",
+                    method: "POST",
+                    data: { url: full_url },
+                    dataType: "text",
+                    success: function (value) {
+                        
+					let data=JSON.parse(value)	
+                       document.getElementById("shortUrl").innerHTML +='<li> Full Url is : '+data.full_url +'</li>'
+					    document.getElementById("shortUrl").innerHTML +='<li> Short Url is :'+ data.short_url+'</li>'  
+                    }
+                });
+            }
+			
+			//***********************
+			// Get Original URL
+            function getlong(url2) {
+                $.ajax({
+                    url: "http://localhost:8884/shortUrl",
+                    method: "GET",
+                    data: { url2: url2 },
+                    dataType: "text",
+                    success: function (data) {
+                        
+                        window.location=data;
+                    }
+                });
+            }
+			
+			//***********************
+			//get All Links
+			      function getAll(all) {
+                $.ajax({
+                    url: "http://localhost:8884/links",
+                    method: "get",
+                    dataType: "text",
+                    success: function (data) {
+					$('#table').show();
+                       var data1=JSON.parse(data);
+					  
+					    for(var i = 0; i < data1.length; i++){
+					     var html = '<tr>';
+     html += '<td>'+data1[i].full_url+'</td>';
+     html += '<td>'+data1[i].short_url+'</td></tr>';
+     $('#table_data').prepend(html);
+	 }
+                    }
+                });
+            }
+			
+        </script>
+
+
+
+    </body>
+
+    </html>
